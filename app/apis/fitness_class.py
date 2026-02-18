@@ -4,11 +4,12 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 
 from app.apis import MSG
-from app.db.fitness_classes import AVAILABLE_SPOTS, CAPACITY, DATETIME, TITLE, TRAINER_NAME
+from app.db.fitness_classes import CLASS_ID, AVAILABLE_SPOTS, CAPACITY, DATETIME, TITLE, TRAINER_NAME
 
 api = Namespace("classes", description="Fitness class endpoints")
 
 _EXAMPLE_CLASS = {
+    CLASS_ID: "class_001",
     TITLE: "Morning Yoga",
     DATETIME: "2026-02-20T09:00:00Z",
     CAPACITY: 20,
@@ -19,6 +20,7 @@ _EXAMPLE_CLASS = {
 class_model = api.model(
     "FitnessClass",
     {
+        CLASS_ID: fields.String(example=_EXAMPLE_CLASS[CLASS_ID]),
         TITLE: fields.String(example=_EXAMPLE_CLASS[TITLE]),
         DATETIME: fields.String(example=_EXAMPLE_CLASS[DATETIME]),
         CAPACITY: fields.Integer(example=_EXAMPLE_CLASS[CAPACITY]),

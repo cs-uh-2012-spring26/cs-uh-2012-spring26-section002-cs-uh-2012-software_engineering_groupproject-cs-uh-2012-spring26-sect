@@ -4,26 +4,47 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 
 from app.apis import MSG
-from app.db.bookings import BOOKED_AT, CLASS_ID, ROLE, USER_EMAIL, USER_NAME
+from app.db.bookings import (
+    BOOKING_ID,
+    BOOKED_AT,
+    CLASS_ID,
+    CREATED_AT,
+    PHONE,
+    ROLE,
+    STATUS,
+    USER_EMAIL,
+    USER_ID,
+    USER_NAME,
+)
 
 api = Namespace("bookings", description="Booking endpoints")
 
 _EXAMPLE_BOOKING = {
+    BOOKING_ID: "booking_001",
     CLASS_ID: "class_001",
+    USER_ID: "user_001",
     USER_NAME: "Jane Member",
     USER_EMAIL: "jane.member@example.com",
+    PHONE: "+971-504-555-0101",
     ROLE: "member",
+    STATUS: "confirmed",
     BOOKED_AT: "2026-02-15T20:30:00Z",
+    CREATED_AT: "2026-02-15T20:30:00Z",
 }
 
 booking_model = api.model(
     "Booking",
     {
+        BOOKING_ID: fields.String(example=_EXAMPLE_BOOKING[BOOKING_ID]),
         CLASS_ID: fields.String(example=_EXAMPLE_BOOKING[CLASS_ID]),
+        USER_ID: fields.String(example=_EXAMPLE_BOOKING[USER_ID]),
         USER_NAME: fields.String(example=_EXAMPLE_BOOKING[USER_NAME]),
         USER_EMAIL: fields.String(example=_EXAMPLE_BOOKING[USER_EMAIL]),
+        PHONE: fields.String(example=_EXAMPLE_BOOKING[PHONE]),
         ROLE: fields.String(example=_EXAMPLE_BOOKING[ROLE], enum=["guest", "member"]),
+        STATUS: fields.String(example=_EXAMPLE_BOOKING[STATUS], enum=["confirmed", "cancelled"]),
         BOOKED_AT: fields.String(example=_EXAMPLE_BOOKING[BOOKED_AT]),
+        CREATED_AT: fields.String(example=_EXAMPLE_BOOKING[CREATED_AT]),
     },
 )
 
@@ -31,6 +52,8 @@ create_booking_model = api.model(
     "CreateBookingRequest",
     {
         CLASS_ID: fields.String(example=_EXAMPLE_BOOKING[CLASS_ID]),
+        USER_ID: fields.String(example=_EXAMPLE_BOOKING[USER_ID]),
+        PHONE: fields.String(example=_EXAMPLE_BOOKING[PHONE]),
     },
 )
 
