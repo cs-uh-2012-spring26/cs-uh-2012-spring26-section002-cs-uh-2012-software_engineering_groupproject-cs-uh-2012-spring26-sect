@@ -1,0 +1,79 @@
+from flask_restx import Namespace, Resource, fields
+from app.apis import MSG
+from app.db.classes import ClassResource
+from app.db.classes import start_time, end_time, location, capacity, trainer_name
+from http import HTTPStatus
+from flask import request
+from datetime import datetime, timedelta
+
+api = Namespace("classes", description="Endpoint for creating fitness classes")
+#Example class
+_Example_class_1={
+  start_time: "2026-03-02T08:30:00",
+  end_time: "2026-03-02T09:45:00",
+  location: "Yoga studio",
+  capacity: 15,
+  trainer_name: "Emily Smith"
+}
+class_create_fields = api.model(
+  "NewClassEntry",{
+    start_time: fields.String(example = _Example_class_1[start_time]),
+    end_time: fields.String(example = _Example_class_1[end_time]),
+    location: fields.String(example = _Example_class_1[location]),
+    capacity: fields.Integer(example = _Example_class_1[capacity]),
+    trainer_name: fields.String(example = _Example_class_1[trainer_name]),
+  },
+)
+@api.route("/")
+class ClassList(Resource):
+  @api.expect(class_create_fields)
+  @api.response(
+    HTTPStatus.OK,
+    "Success",
+    api.model(
+      "Create Class",
+      {MSG: fields.String("Class created with id: abc123baha")},
+    ),
+  )
+  @api.response(
+    HTTPStatus.NOT_ACCEPTABLE,
+    "Invalid Request",
+    api.model(
+      "Create Class: Bad request",
+      {MSG: fields.String("Invalid value given for one of the fields")},
+    ),
+  )
+  def post(self):
+    assert isinstance(request.json, dict)
+
+    start_time_value = request.json.get(start_time)
+    end_time_value = request.json.get(end_time)
+    location_value = request.json.get(location)
+    capacity_value = request.json.get(capacity)
+    trainer_name_value = request.json.get(trainer_name)
+    #Check for value types and make sure all values are non-empty
+    if not(
+      isinstance(start_time_value, str) and len(start_time_value)>0 and
+      isinstance(end_time_value, str) and len(end_time_value)>0 and
+      isinstance(location_value, str) and len(location_value)>0 and
+      isinstance(trainer_name_value, str) and len(trainer_name_value)>0 and
+      isinstance(capacity_value, int) and capacity_value>0
+    ):
+      return {MSG:"Invalid value given at one of fields"}, HTTPStatus.NOT_ACCEPTABLE
+    #parse start and end time as datetime objects
+    try:
+      start_datetime = datetime.fromisoformat(start_time_value)
+      end_datetime = datetime.fromisoformat(end_time_value)
+    except Exception:
+      return {MSG: "Invalid value given at one of fields"}, HTTPStatus.NOT_ACCEPTABLE
+    #classes can be booked only within upcoming 2 weeks
+    now = datetime.now() #current local time
+    latest_allowed = now+timedelta(days=14) #latest start date permitted
+    if start_datetime<now or start_datetime>latest_allowed:
+      return {MSG: "Classes can only be created for upcoming 2 weeks"}, HTTPStatus.NOT_ACCEPTABLE
+    #end time must be before start time; class cannot start and end at same time
+    if end_datetime<=start_datetime:
+      return {MSG:"End time must be after start time"}, HTTPStatus.NOT_ACCEPTABLE
+    class_resource = ClassResource()
+    class_id = class_resource.create_class(start_time_value, end_time_value, location_value, capacity_value, trainer_name_value)
+    return {MSG: f"Class created with id {class_id}"}, HTTPStatus.OK
