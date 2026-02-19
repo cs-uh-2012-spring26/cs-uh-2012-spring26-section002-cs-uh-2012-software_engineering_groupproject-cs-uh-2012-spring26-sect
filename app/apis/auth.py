@@ -29,7 +29,7 @@ REGISTER_USER = api.model(
     {
         USERNAME: fields.String(required=True, example=_EXAMPLE_USER_1[USERNAME]),
         EMAIL: fields.String(required=True, example=_EXAMPLE_USER_1[EMAIL]),
-        "password": fields.String(required=True, example=_EXAMPLE_USER_1["password"],
+        "password": fields.String(required=True, example=_EXAMPLE_USER_1["password"]),
         PHONE: fields.String(required=True, example=_EXAMPLE_USER_1[PHONE]),
     },
 )
@@ -51,7 +51,7 @@ TOKEN_MODEL = api.model(
 
 @api.route("/register")
 class Register(Resource):
-    @api.expect(REGISTER_MODEL, validate=True)
+    @api.expect(REGISTER_USER, validate=True)
     @api.response(HTTPStatus.CREATED, "User registered")
     @api.response(HTTPStatus.BAD_REQUEST, "Username or email already exists")
     def post(self):
@@ -60,7 +60,7 @@ class Register(Resource):
         password = request.json.get("password")
         phone = request.json.get(PHONE)
         user_res = UserResource()
-        if user_res.get_by_username(username) or user_res.get_by_email(email):
+        if user_res.get_user_by_username(username) or user_res.get_user_by_email(email):
             return {MSG: "Username or email already exists"}, HTTPStatus.BAD_REQUEST
         password_hash = generate_password_hash(password)
         user_id = user_res.create_user(username, email, password_hash, phone, role="member")
@@ -69,7 +69,7 @@ class Register(Resource):
 
 @api.route("/login")
 class Login(Resource):
-    @api.expect(LOGIN_MODEL, validate=True)
+    @api.expect(LOGIN_USER, validate=True)
     @api.response(HTTPStatus.OK, "Login successful", TOKEN_MODEL)
     @api.response(HTTPStatus.UNAUTHORIZED, "Invalid credentials")
     def post(self):
