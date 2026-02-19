@@ -6,8 +6,20 @@ from flask_restx import Namespace, Resource, fields
 from datetime import datetime as dt_mod, timezone
 
 from app.apis import MSG
-from app.db.fitness_classes import CLASS_ID, AVAILABLE_SPOTS, CAPACITY, DATETIME, TITLE, TRAINER_NAME
-from app.db.fitness_classes import build_fitness_class_document, create_fitness_class
+from app.db.fitness_classes import (
+    FITNESS_CLASS_COLLECTION,
+    CLASS_ID,
+    AVAILABLE_SPOTS,
+    CAPACITY,
+    DATETIME,
+    TITLE,
+    TRAINER_NAME,
+    build_fitness_class_document,
+    create_fitness_class,
+)
+
+from app.db import DB
+from app.db.utils import serialize_items
 
 api = Namespace("classes", description="Fitness class endpoints")
 
@@ -45,7 +57,6 @@ create_class_model = api.model(
 
 @api.route("/")
 class ClassListResource(Resource):
-    @api.doc(params={"trainer": "Optional trainer filter"})
     @api.response(
         HTTPStatus.OK,
         "Class list fetched",
@@ -57,14 +68,14 @@ class ClassListResource(Resource):
 
         TODO:
         - Fetch upcoming classes from storage.
-        - Apply optional trainer filter.
         """
-        _trainer_filter = request.args.get("trainer")
-        _ = _trainer_filter
+        collection = DB.get_collection(FITNESS_CLASS_COLLECTION)
+        
+        classes = list(collection.find())
 
         return {
-            MSG: "TODO: implement class listing with filters",
-        }, HTTPStatus.NOT_IMPLEMENTED
+            MSG: serialize_items(classes),
+        }, HTTPStatus.OK
 
     @api.expect(create_class_model)
     @api.response(HTTPStatus.CREATED, "Class created")
