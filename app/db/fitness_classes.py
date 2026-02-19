@@ -27,7 +27,7 @@ def get_class_by_class_id(class_id: str) -> dict | None:
 
 
 def decrement_available_spot(class_id: str) -> bool:
-	"""Atomically decrement `available_spots` by 1 only when spots are still available."""
+	"""Decrement `available_spots` by 1 only when spots are still available."""
 	update_result = _collection().update_one(
 		{CLASS_ID: class_id, AVAILABLE_SPOTS: {"$gt": 0}},
 		{"$inc": {AVAILABLE_SPOTS: -1}},
