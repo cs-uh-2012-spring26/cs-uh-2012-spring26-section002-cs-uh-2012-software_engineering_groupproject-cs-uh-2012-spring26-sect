@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.apis import MSG
 from app.db.classes import ClassResource
-from app.db.classes import start_time, end_time, location, capacity, trainer_name
+from app.db.classes import start_time, end_time, location, capacity, remaining_spots, trainer_name
 from http import HTTPStatus
 from flask import request
 from datetime import datetime, timedelta
@@ -13,7 +13,8 @@ _Example_class_1={
   end_time: "2026-03-02T09:45:00",
   location: "Yoga studio",
   capacity: 15,
-  trainer_name: "Emily Smith"
+  trainer_name: "Emily Smith",
+  remaining_spots:15
 }
 class_create_fields = api.model(
   "NewClassEntry",{
@@ -24,8 +25,33 @@ class_create_fields = api.model(
     trainer_name: fields.String(example = _Example_class_1[trainer_name]),
   },
 )
+class_list_fields = api.model(
+  "ClassList", {
+    start_time: fields.String(example = _Example_class_1[start_time]),
+    end_time: fields.String(example = _Example_class_1[end_time]),
+    location: fields.String(example = _Example_class_1[location]),
+    capacity: fields.Integer(example = _Example_class_1[capacity]),
+    remaining_spots: fields.Integer(example = _Example_class_1[remaining_spots]),
+    trainer_name: fields.String(example = _Example_class_1[trainer_name]),
+  },
+)
 @api.route("/")
 class ClassList(Resource):
+  #Fetches list of upcoming fitness classes, endpoint used by guests, members, trainers and admins, returns all classes scheduled within upcoming 2 weeks, inlcudes full classes
+  @api.response(
+      HTTPStatus.OK,
+      "Success",
+      api.model(
+        "Upcoming classes",
+        {MSG: fields.List(fields.Nested(class_list_fields))}
+      ),
+  )
+  def get(self):
+    class_resource = ClassResource()
+    upcoming_classes = class_resource.get_upcoming_classes()
+    return {MSG: upcoming_classes}, HTTPStatus.OK
+  
+  #Creates a new fitness class, endpoint used by trainers and admins, validates inputs and applies upcoming 2 weeks rule
   @api.expect(class_create_fields)
   @api.response(
     HTTPStatus.OK,
