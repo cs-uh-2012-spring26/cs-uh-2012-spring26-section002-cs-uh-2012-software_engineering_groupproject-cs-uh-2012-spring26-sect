@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-from app.apis.student import api as student_ns
-from app.apis.hello import api as hello_ns
 from app.apis.classes import api as classes_ns
-=======
 from app.apis.auth import api as auth_ns
 from app.apis.auth import api as user_ns
->>>>>>> main
 from app.config import Config
 from app.db import DB
 
