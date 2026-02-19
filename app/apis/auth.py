@@ -29,7 +29,7 @@ REGISTER_USER = api.model(
     {
         USERNAME: fields.String(required=True, example=_EXAMPLE_USER_1[USERNAME]),
         EMAIL: fields.String(required=True, example=_EXAMPLE_USER_1[EMAIL]),
-        "password": fields.String(required=True, example=_EXAMPLE_USER_1["password"],
+        "password": fields.String(required=True, example=_EXAMPLE_USER_1["password"]),
         PHONE: fields.String(required=True, example=_EXAMPLE_USER_1[PHONE]),
     },
 )
