@@ -77,7 +77,7 @@ class Login(Resource):
         password = request.json.get("password")
 
         user_res = UserResource()
-        user = user_res.get_by_username(username)
+        user = user_res.get_user_by_username(username)
         if user is None:
             return {MSG: "Invalid credentials"}, HTTPStatus.UNAUTHORIZED
 
