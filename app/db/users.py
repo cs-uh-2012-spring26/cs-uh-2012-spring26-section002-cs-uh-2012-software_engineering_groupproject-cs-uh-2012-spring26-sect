@@ -4,7 +4,7 @@ from app.db import DB
 # User Collection Name
 USER_COLLECTION = "users"
 
-# Student fields
+# User fields
 USERNAME = "name"
 EMAIL = "email"
 PASSWORD_HASH = "password_hash"
