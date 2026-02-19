@@ -51,7 +51,7 @@ TOKEN_MODEL = api.model(
 
 @api.route("/register")
 class Register(Resource):
-    @api.expect(REGISTER_MODEL, validate=True)
+    @api.expect(REGISTER_USER, validate=True)
     @api.response(HTTPStatus.CREATED, "User registered")
     @api.response(HTTPStatus.BAD_REQUEST, "Username or email already exists")
     def post(self):
@@ -69,7 +69,7 @@ class Register(Resource):
 
 @api.route("/login")
 class Login(Resource):
-    @api.expect(LOGIN_MODEL, validate=True)
+    @api.expect(LOGIN_USER, validate=True)
     @api.response(HTTPStatus.OK, "Login successful", TOKEN_MODEL)
     @api.response(HTTPStatus.UNAUTHORIZED, "Invalid credentials")
     def post(self):
