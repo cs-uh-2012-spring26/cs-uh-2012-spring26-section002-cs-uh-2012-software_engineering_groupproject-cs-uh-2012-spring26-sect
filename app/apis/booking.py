@@ -86,11 +86,11 @@ class BookingResource(Resource):
         - Check class availability. [ X ]
         - Prevent duplicate booking and save booking. [ X ]
         """
-        _payload = request.json if isinstance(request.json, dict) else {}
+        data = request.json if isinstance(request.json, dict) else {}
 
-        user_id = _payload.get(USER_ID)
-        class_id = _payload.get(CLASS_ID)
-        phone = _payload.get(PHONE)
+        user_id = data.get(USER_ID)
+        class_id = data.get(CLASS_ID)
+        phone = data.get(PHONE)
 
         if not user_id or not class_id or not phone:
             return {
