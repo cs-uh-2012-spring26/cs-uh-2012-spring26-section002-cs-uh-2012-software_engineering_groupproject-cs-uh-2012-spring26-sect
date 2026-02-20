@@ -17,7 +17,6 @@ class UserResource:
     def __init__(self):
         self.collection = DB.get_collection(USER_COLLECTION)
 
-
     def create_user(self, username: str, email: str, password_hash: str, phone: str | None = None, role: str = "member"):
         user = {
             USERNAME: username,

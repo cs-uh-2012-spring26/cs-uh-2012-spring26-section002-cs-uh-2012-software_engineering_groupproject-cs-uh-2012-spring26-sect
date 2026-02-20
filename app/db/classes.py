@@ -2,6 +2,9 @@ from app.db.utils import serialize_item, serialize_items
 from app.db import DB
 from datetime import datetime, timedelta
 
+from bson import ObjectId
+
+
 #Class collection name
 CLASS_COLLECTION = "classes"
 #Class fields
@@ -52,3 +55,20 @@ class ClassResource:
       if now<=class_start_datetime<=latest_allowed:
         upcoming_classes.append(one_class)
     return upcoming_classes
+
+  def get_class_by_id(self, class_id: str): #get a class by its id
+    try:
+      obj_id = ObjectId(class_id)
+    except Exception:
+        return None
+    class = self.collection.find_one({"_id": obj_id})
+    return serialize_item(class)
+
+
+  def decrement_remaining_spots(self, class_id: str): #decrement remaining spots of a class when a member books it
+    from bson import ObjectId
+    result = self.collection.update_one(
+      {"_id": ObjectId(class_id), remaining_spots: {"$gt": 0}},
+      {"$inc": {remaining_spots: -1}},
+    )
+    return result.modified_count == 1
