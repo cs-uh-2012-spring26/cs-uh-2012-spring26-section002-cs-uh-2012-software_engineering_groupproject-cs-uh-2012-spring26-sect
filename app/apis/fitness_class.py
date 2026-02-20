@@ -2,6 +2,8 @@ from http import HTTPStatus
 
 from flask import request
 from flask_restx import Namespace, Resource, fields
+from app.apis.decorators import require_roles
+from flask_jwt_extended import get_jwt_identity
 
 from datetime import datetime as dt_mod, timezone
 
@@ -63,6 +65,7 @@ class ClassListResource(Resource):
         api.model(MSG, {MSG: fields.List(fields.Nested(class_model))}),
     )
     @api.response(HTTPStatus.BAD_REQUEST, "Invalid payload")
+    @require_roles("guest", "member")
     def get(self):
         """
         SEE CLASS LIST: allowed for all users
@@ -79,6 +82,7 @@ class ClassListResource(Resource):
     @api.response(HTTPStatus.CREATED, "Class created")
     @api.response(HTTPStatus.FORBIDDEN, "Only trainer/admin can create classes")
     @api.response(HTTPStatus.BAD_REQUEST, "Invalid fields")
+    @require_roles(["trainer", "admin"])
     def post(self):
         """
         CREATE NEW CLASS: allowed for trainers/admins
@@ -118,8 +122,6 @@ class ClassListResource(Resource):
             return {
                 MSG: f"{DATETIME} must not be in the past"
             }, HTTPStatus.BAD_REQUEST
-
-        # HERE WE WILL VALIDATE PERMISSIONS 
         
         
         # build and insert
