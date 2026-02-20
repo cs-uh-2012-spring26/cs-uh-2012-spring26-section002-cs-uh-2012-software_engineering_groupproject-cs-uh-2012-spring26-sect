@@ -1,6 +1,7 @@
 from app.apis.hello import api as hello_ns
 from app.apis.classes import api as classes_ns
 from app.apis.auth import api as auth_ns
+from app.apis.bookings import api as bookings_ns
 from app.config import Config
 from app.db import DB
 
@@ -29,6 +30,7 @@ def create_app():
     api.add_namespace(hello_ns)
     api.add_namespace(classes_ns)
     api.add_namespace(auth_ns)
+    api.add_namespace(bookings_ns)
 
     @api.errorhandler(Exception)
     def handle_input_validation_error(error):

@@ -1,11 +1,10 @@
 from flask_restx import Namespace, Resource, fields
 from app.apis import MSG
 from app.db.classes import ClassResource, remaining_spots
-from app.db.bookings import BookingResource, CLASS_ID
+from app.db.bookings import BookingResource, CLASS_ID, BOOKING_DATETIME
 from http import HTTPStatus
 from flask import request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from datetime import datetime
 
 
 api = Namespace("bookings", description="Endpoint for creating bookings")
