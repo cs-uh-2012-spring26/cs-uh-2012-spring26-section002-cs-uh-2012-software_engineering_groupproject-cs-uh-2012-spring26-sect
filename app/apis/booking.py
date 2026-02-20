@@ -30,7 +30,7 @@ from app.db.users import (
 )
 from app.db.fitness_classes import decrement_available_spot, get_class_by_class_id
 
-api = Namespace("bookings", description="Booking endpoints")
+api = Namespace("bookings", description="    Endpoint for booking a class and seeing booking list")
 
 _EXAMPLE_BOOKING = {
     BOOKING_ID: "booking_001",
@@ -79,12 +79,7 @@ class BookingResource(Resource):
     @api.response(HTTPStatus.FORBIDDEN, "Only members can book classes")
     def post(self):
         """
-        Book class (member only in current SRS).
-
-        TODO:
-        - Validate authenticated user is a member. [ X ]
-        - Check class availability. [ X ]
-        - Prevent duplicate booking and save booking. [ X ]
+        BOOK CLASS: allowed for members only
         """
         data = request.json if isinstance(request.json, dict) else {}
 
@@ -139,12 +134,7 @@ class BookingListByClassResource(Resource):
     @api.response(HTTPStatus.FORBIDDEN, "Only trainer/admin can view booking list")
     def get(self, class_id: str):
         """
-        View booking list for a class (trainer/admin).
-
-        TODO:
-        - Validate caller role. [ ]
-        - Verify class exists. [ X ]
-        - Fetch and return booking list by class. [ X ]
+        VIEW BOOKING LIST FOR CLASS: allowed for trainers/admins
         """
         bookings = list_bookings_by_class(class_id)
 
