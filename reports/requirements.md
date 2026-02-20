@@ -59,18 +59,18 @@ This clarification directly impacted our backend design by requiring authenticat
 **Primary Actor:** Trainer 
 **Preconditions:** User is authenticated as trainer
 
-**Main success scenario:**
+**Main Success Scenario:**
 1. Trainer selects a class to view bookings
 2. System checks that the selected class exists
 3. System retrieves all bookings for selected class
 4. System displays the details of members who have booked the class
 
 **Extensions:**
-2a. If the class selected does not exist, system displays an error message
-3a. In case of no bookings yet, system displays a placeholder message
+- 2a. If the class selected does not exist, system displays an error message
+- 3a. In case of no bookings yet, system displays a placeholder message
 
 **Success guarantee:**
-The system returns the booking list for the selected class
+- The system returns the booking list for the selected class
 
 ---
 
