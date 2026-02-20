@@ -52,6 +52,9 @@ class ClassList(Resource):
   def get(self):
     class_resource = ClassResource()
     upcoming_classes = class_resource.get_upcoming_classes()
+    #If there are no upcoming classes return a message
+    if len(upcoming_classes) == 0:
+      return {MSG: "No upcoming classes available"}, HTTPStatus.OK
     return {MSG: upcoming_classes}, HTTPStatus.OK
   
   #Creates a new fitness class, endpoint used by trainers and admins, validates inputs and applies upcoming 2 weeks rule
