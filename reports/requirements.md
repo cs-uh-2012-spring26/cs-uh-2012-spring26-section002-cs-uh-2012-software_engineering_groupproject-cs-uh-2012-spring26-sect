@@ -1,14 +1,10 @@
-# Requirements 
+# 1. Requirements Elicitation and Analysis
 
----
-
-## 1. Requirements Elicitation and Analysis
-
-### Client Meeting Information
+## Client Meeting Information
 - **Date of Meeting:** February 11, 2026 
 - **Duration:** 30 minutes
 
-### Elicitation Techniques Used
+## Elicitation Techniques Used
 
 1. **Structured Interviewing**
    - We prepared an extensive list of functional and non-functional questions.
@@ -22,16 +18,16 @@
    - We discussed the four major system features.
    - We clarified actors and system boundaries.
 
-### Reflection
+## Reflection
 
-#### (1) Usefulness of Techniques
+### (1) Usefulness of Techniques
 
 The structured form of interviewing with pre defined questions was very useful because it ensured we covered all major system aspects and avoided missing key requirements. It also helped uncover edge cases and clarify ambiguous behaviors.
 
 In retrospect, we would improve our process by:
 - Bringing wireframes to better visualize system interactions.
 
-#### (2) Important Clarification Gained
+### (2) Important Clarification Gained
 
 During the elicitation process, we clarified the distinction between registered members and unregistered guests. The client specified that only registered members should be allowed to book classes, while unregistered users may only view available classes.
 
@@ -39,25 +35,25 @@ This clarification directly impacted our backend design by requiring authenticat
 
 ---
 
-## 2. Requirements Specification
+# 2. Requirements Specification
 
-### UML Use Case Diagram
+## UML Use Case Diagram
 
 ![Use Case Diagram](UML_Use_Case_Diagram.png)
 
 ### Use Case Specifications
 
-#### Feature 1: Create Class
+### Feature 1: Create Class
 
-#### Feature 2: View Class List
+### Feature 2: View Class List
 
-#### Feature 3: Book a Class
+### Feature 3: Book a Class
 
-#### Feature 4: View Bookings for a Class
+### Feature 4: View Bookings for a Class
 
-**Use Case:**  View Bookings for a Class
-**Primary Actor:** Trainer 
-**Preconditions:** User is authenticated as trainer
+**Use Case:**  View Bookings for a Class<br>
+**Primary Actor:** Trainer <br>
+**Preconditions:** User is authenticated as trainer<br>
 
 **Main Success Scenario:**
 1. Trainer selects a class to view bookings
