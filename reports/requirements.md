@@ -39,6 +39,42 @@ This clarification directly impacted our backend design by requiring authenticat
 
 ---
 
+## 2. Requirements Specification
+
+### UML Use Case Diagram
+
+![Use Case Diagram](UML_Use_Case_Diagram.png)
+
+### Use Case Specifications
+
+#### Feature 1: Create Class
+
+#### Feature 2: View Class List
+
+#### Feature 3: Book a Class
+
+#### Feature 4: View Bookings for a Class
+
+**Use Case:**  View Bookings for a Class
+**Primary Actor:** Trainer 
+**Preconditions:** User is authenticated as trainer
+
+**Main success scenario:**
+1. Trainer selects a class to view bookings
+2. System checks that the selected class exists
+3. System retrieves all bookings for selected class
+4. System displays the details of members who have booked the class
+
+**Extensions:**
+2a. If the class selected does not exist, system displays an error message
+3a. In case of no bookings yet, system displays a placeholder message
+
+**Success guarantee:**
+The system returns the booking list for the selected class
+
+---
+
+
 
 
 
