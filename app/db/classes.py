@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 #Class collection name
 CLASS_COLLECTION = "classes"
 #Class fields
+class_name ="class_name"
 start_time = "start_time"
 end_time = "end_time"
 location = "location"
@@ -15,8 +16,9 @@ remaining_spots = "remaining_spots"
 class ClassResource:
   def __init__(self):
     self.collection = DB.get_collection(CLASS_COLLECTION)
-  def create_class(self, start_time_value: str, end_time_value:str, location_value: str, capacity_value:int, trainer_name_value: str):
+  def create_class(self, class_name_value:str, start_time_value: str, end_time_value:str, location_value: str, capacity_value:int, trainer_name_value: str):
     new_class = { #build a new class from imput given by trainer/admin
+      class_name: class_name_value,
       start_time: start_time_value,
       end_time: end_time_value,
       location: location_value,

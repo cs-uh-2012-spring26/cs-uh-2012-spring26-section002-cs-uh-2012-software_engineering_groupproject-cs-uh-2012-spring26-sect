@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.apis import MSG
 from app.db.classes import ClassResource
-from app.db.classes import start_time, end_time, location, capacity, remaining_spots, trainer_name
+from app.db.classes import class_name, start_time, end_time, location, capacity, remaining_spots, trainer_name
 from http import HTTPStatus
 from flask import request
 from datetime import datetime, timedelta
@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 api = Namespace("classes", description="Endpoint for creating fitness classes")
 #Example class
 _Example_class_1={
+  class_name: "Yoga",
   start_time: "2026-03-02T08:30:00",
   end_time: "2026-03-02T09:45:00",
   location: "Yoga studio",
@@ -18,6 +19,7 @@ _Example_class_1={
 }
 class_create_fields = api.model(
   "NewClassEntry",{
+    class_name: fields.String(example = _Example_class_1[class_name]),
     start_time: fields.String(example = _Example_class_1[start_time]),
     end_time: fields.String(example = _Example_class_1[end_time]),
     location: fields.String(example = _Example_class_1[location]),
@@ -27,6 +29,7 @@ class_create_fields = api.model(
 )
 class_list_fields = api.model(
   "ClassList", {
+    class_name: fields.String(example= _Example_class_1[class_name]),
     start_time: fields.String(example = _Example_class_1[start_time]),
     end_time: fields.String(example = _Example_class_1[end_time]),
     location: fields.String(example = _Example_class_1[location]),
@@ -49,6 +52,9 @@ class ClassList(Resource):
   def get(self):
     class_resource = ClassResource()
     upcoming_classes = class_resource.get_upcoming_classes()
+    #If there are no upcoming classes return a message
+    if len(upcoming_classes) == 0:
+      return(MSG: "No upcoming classes availible").HTTPStatus.OK
     return {MSG: upcoming_classes}, HTTPStatus.OK
   
   #Creates a new fitness class, endpoint used by trainers and admins, validates inputs and applies upcoming 2 weeks rule
@@ -72,6 +78,7 @@ class ClassList(Resource):
   def post(self):
     assert isinstance(request.json, dict)
 
+    class_name_value = request.json.get(class_name)
     start_time_value = request.json.get(start_time)
     end_time_value = request.json.get(end_time)
     location_value = request.json.get(location)
@@ -79,6 +86,7 @@ class ClassList(Resource):
     trainer_name_value = request.json.get(trainer_name)
     #Check for value types and make sure all values are non-empty
     if not(
+      isinstance(class_name_value, str) and len(class_name_value)>0 and
       isinstance(start_time_value, str) and len(start_time_value)>0 and
       isinstance(end_time_value, str) and len(end_time_value)>0 and
       isinstance(location_value, str) and len(location_value)>0 and
@@ -101,5 +109,5 @@ class ClassList(Resource):
     if end_datetime<=start_datetime:
       return {MSG:"End time must be after start time"}, HTTPStatus.NOT_ACCEPTABLE
     class_resource = ClassResource()
-    class_id = class_resource.create_class(start_time_value, end_time_value, location_value, capacity_value, trainer_name_value)
+    class_id = class_resource.create_class(class_name_value, start_time_value, end_time_value, location_value, capacity_value, trainer_name_value)
     return {MSG: f"Class created with id {class_id}"}, HTTPStatus.OK
